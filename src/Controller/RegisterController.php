@@ -24,7 +24,7 @@ class RegisterController
         RegistrationEntryDto $entryDto,
         RegistrationHandler $handler
     ): Response {
-//        dd($entryDto);
+        dd($entryDto);
 //        dd($request);
 
         $handler->handle($entryDto);

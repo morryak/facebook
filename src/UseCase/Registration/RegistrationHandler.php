@@ -8,7 +8,7 @@ use App\DTO\RequestDto\RegistrationEntryDto;
 
 class RegistrationHandler
 {
-    public function __construct(RegistrationManager $manager)
+    public function __construct()
     {
     }
 

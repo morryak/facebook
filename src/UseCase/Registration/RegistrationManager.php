@@ -8,7 +8,7 @@ use Symfony\Bridge\Doctrine\ManagerRegistry;
 
 class RegistrationManager
 {
-    public function __construct(ManagerRegistry $doctrine)
+    public function __construct()
     {
     }
 }
