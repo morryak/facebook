@@ -6,7 +6,7 @@ services:
     container_name: ${PROJECT}_nginx
     build:
       context: docker/context
-      dockerfile: docker/context/images/nginx/dev/Dockerfile
+      dockerfile: images/nginx/dev/Dockerfile
       args:
         PHP_FPM_SERVICE_NAME: php-fpm
     ports:
@@ -24,7 +24,7 @@ services:
       - "9000:9000"
     build:
       context: docker/context
-      dockerfile: docker/context/images/php-fpm/dev/Dockerfile
+      dockerfile: images/php-fpm/dev/Dockerfile
     environment:
       PHP_IDE_CONFIG: serverName=psync_php-fpm
     volumes:
@@ -38,7 +38,7 @@ services:
     container_name: ${PROJECT}_mysql
     build:
       context: docker/context
-      dockerfile: docker/context/images/mysql/dev/Dockerfile
+      dockerfile: images/mysql/dev/Dockerfile
     volumes:
       - ./docker/data/lib/mysql:/var/lib/mysql
       - ./docker/context/conf/mysql/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
