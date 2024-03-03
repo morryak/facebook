@@ -1,0 +1,22 @@
+FROM ${CI_REGISTRY}/b2b/base/php-fpm8.1 AS composer-build
+ARG ENVJSON
+WORKDIR /var/www/
+COPY . ./
+
+RUN set -ex \
+    && export $(echo ${ENVJSON} | base64 -d | xargs) \
+    && touch /var/www/.env \
+    && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+    && php -r "if (hash_file('sha384', 'composer-setup.php') === file_get_contents('https://composer.github.io/installer.sig')) { echo 'Installer verified'; }   else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
+    && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
+    && COMPOSER_CACHE_DIR=/cache COMPOSER_NO_INTERACTION=1 COMPOSER_MEMORY_LIMIT=-1 /usr/local/bin/composer install --no-progress
+
+FROM ${CI_REGISTRY}/b2b/base/nginx
+
+WORKDIR /var/www/
+
+COPY . ./
+COPY --from=composer-build /var/www/vendor ./vendor/
+COPY --from=composer-build /var/www/composer.json ./
+COPY --from=composer-build /var/www/composer.lock ./
+

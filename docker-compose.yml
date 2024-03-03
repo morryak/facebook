@@ -1,0 +1,53 @@
+version: "3.8"
+
+services:
+  nginx:
+    restart: unless-stopped
+    container_name: ${PROJECT}_nginx
+    build:
+      context: docker/context
+      dockerfile: docker/context/images/nginx/dev/Dockerfile
+      args:
+        PHP_FPM_SERVICE_NAME: php-fpm
+    ports:
+      - "80:80"
+    volumes:
+      - ./public:/var/www/public
+      - ./var/log/nginx:/var/log/nginx
+    depends_on:
+      - php-fpm
+
+  php-fpm:
+    restart: unless-stopped
+    container_name: ${PROJECT}_php-fpm
+    ports:
+      - "9000:9000"
+    build:
+      context: docker/context
+      dockerfile: docker/context/images/php-fpm/dev/Dockerfile
+    environment:
+      PHP_IDE_CONFIG: serverName=psync_php-fpm
+    volumes:
+      - ./:/var/www
+      - ./tests/_output/coverage:/opt/phpstorm-coverage
+    depends_on:
+      - mysql
+
+  mysql:
+    restart: unless-stopped
+    container_name: ${PROJECT}_mysql
+    build:
+      context: docker/context
+      dockerfile: docker/context/images/mysql/dev/Dockerfile
+    volumes:
+      - ./docker/data/lib/mysql:/var/lib/mysql
+      - ./docker/context/conf/mysql/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD:  ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DB: ${MYSQL_DATABASE}
+
+
