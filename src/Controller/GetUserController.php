@@ -4,27 +4,27 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\DTO\RequestDto\RegistrationEntryDto;
-use App\UseCase\User\Registration\RegistrationHandler;
+use App\UseCase\User\GetUser\GetUserHandler;
+use App\UseCase\User\GetUser\UserNotFoundException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
-use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Throwable;
 
 #[AsController]
-class RegisterController
+class GetUserController
 {
-    #[Route('/user/register', name: 'registration', methods: Request::METHOD_POST, format: 'json')]
+    #[Route('/user/get/{id}', name: 'get user', requirements: ['id' => "\d+"], methods: Request::METHOD_GET, format: 'json')]
     public function handle(
-        #[MapRequestPayload(validationFailedStatusCode: Response::HTTP_BAD_REQUEST)]
-        RegistrationEntryDto $entryDto,
-        RegistrationHandler $handler
+        int $id,
+        GetUserHandler $handler
     ): Response {
         try {
-            $userId = $handler->handle($entryDto);
+            $result = $handler->handle($id);
+        } catch (UserNotFoundException $e) {
+            return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_NOT_FOUND);
         } catch (Throwable $e) {
             return new JsonResponse(
                 [
@@ -39,6 +39,6 @@ class RegisterController
             );
         }
 
-        return new JsonResponse(['user_id' => $userId], Response::HTTP_OK);
+        return new JsonResponse($result, Response::HTTP_OK);
     }
 }
