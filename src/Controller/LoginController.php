@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\User;
+use App\UseCase\User\LoginUser\InvalidCredentialsException;
+use App\UseCase\User\LoginUser\LoginHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,19 +16,18 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 class LoginController extends AbstractController
 {
     #[Route('/login', name: 'login', methods: Request::METHOD_POST)]
-    public function index(#[CurrentUser] ?User $user): Response
-    {
-        if (null === $user) {
+    public function index(
+        #[CurrentUser] ?User $user,
+        LoginHandler $handler,
+    ): Response {
+        try {
+            $resultDto = $handler->handle($user);
+        } catch (InvalidCredentialsException $e) {
             return $this->json([
-                'message' => 'missing credentials',
+                'message' => $e->getMessage(),
             ], Response::HTTP_UNAUTHORIZED);
         }
 
-        $token = '...'; // somehow create an API token for $user;
-
-        return $this->json([
-            'user' => $user->getUserIdentifier(),
-            'token' => $token,
-        ]);
+        return $this->json($resultDto);
     }
 }
