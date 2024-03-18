@@ -39,9 +39,11 @@ readonly class RegistrationHandler
         ];
 
         try {
-            return $this->manager->insertUser($user);
+            $this->manager->insertUser($user);
         } catch (UniqueConstraintViolationException) {
             throw new RuntimeException('Current email are already used');
         }
+
+        return $this->manager->getConnection()->lastInsertId();
     }
 }
