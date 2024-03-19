@@ -28,7 +28,6 @@ services:
       PHP_IDE_CONFIG: serverName=psync_php-fpm
     volumes:
       - ./:/var/www
-      - ./tests/_output/coverage:/opt/phpstorm-coverage
     depends_on:
       - mysql
 
