@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\UseCase\User\GetUser;
+namespace App\AppBundle\Exception;
 
 use Exception;
 

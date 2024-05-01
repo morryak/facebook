@@ -5,22 +5,24 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\AppBundle\Exception\UserNotFoundException;
-use App\UseCase\User\GetUser\GetUserHandler;
+use App\Entity\User;
+use App\UseCase\User\AddUserFriend\AddUserFriendHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Throwable;
 
 #[AsController]
-class GetUserController
+class AddUserFriendController
 {
-    #[Route('/user/get/{id}', methods: [Request::METHOD_GET], format: 'json')]
-    public function handle(string $id, GetUserHandler $handler): Response
+    #[Route('/friend/set/{user_id}', methods: [Request::METHOD_PUT], format: 'json')]
+    public function handle(#[CurrentUser] ?User $user, string $user_id, AddUserFriendHandler $handler): Response
     {
         try {
-            $result = $handler->handle($id);
+            $handler->handle($user, $user_id);
         } catch (UserNotFoundException $e) {
             return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_NOT_FOUND);
         } catch (Throwable $e) {
@@ -37,6 +39,6 @@ class GetUserController
             );
         }
 
-        return new JsonResponse($result, Response::HTTP_OK);
+        return new JsonResponse();
     }
 }

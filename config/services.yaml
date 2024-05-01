@@ -26,3 +26,5 @@ services:
     App\AppBundle\Doctrine\Migrations\IgnoreFksListener:
         tags:
             - {name: doctrine.event_listener, event: postGenerateSchema }
+
+    App\Security\ApiKeyAuthenticator:

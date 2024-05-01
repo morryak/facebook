@@ -4,25 +4,29 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\AppBundle\Exception\UserNotFoundException;
-use App\UseCase\User\GetUser\GetUserHandler;
+use App\Entity\User;
+use App\UseCase\Feed\GetFeed\GetFeedHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Throwable;
 
 #[AsController]
-class GetUserController
+class GetFeedController
 {
-    #[Route('/user/get/{id}', methods: [Request::METHOD_GET], format: 'json')]
-    public function handle(string $id, GetUserHandler $handler): Response
-    {
+    #[Route('/post/feed', name: 'get feed list', methods: Request::METHOD_GET, format: 'json')]
+    public function handle(
+        #[CurrentUser] ?User $user,
+        GetFeedHandler $handler,
+        #[MapQueryParameter(filter: FILTER_VALIDATE_INT)] int $limit = 10,
+        #[MapQueryParameter(filter: FILTER_VALIDATE_INT)] int $offset = 0,
+    ): Response {
         try {
-            $result = $handler->handle($id);
-        } catch (UserNotFoundException $e) {
-            return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_NOT_FOUND);
+            $result = $handler->handle($user, $limit, $offset);
         } catch (Throwable $e) {
             return new JsonResponse(
                 [

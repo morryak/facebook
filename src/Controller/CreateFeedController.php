@@ -4,30 +4,33 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\AppBundle\Exception\UserNotFoundException;
-use App\UseCase\User\UserSearch\UserSearchHandler;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\DTO\RequestDto\RegistrationEntryDto;
+use App\Entity\User;
+use App\UseCase\Feed\CreateFeed\CreateFeedEntryDto;
+use App\UseCase\Feed\CreateFeed\CreateFeedHandler;
+use App\UseCase\Feed\GetFeed\GetFeedHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Throwable;
 
 #[AsController]
-class UserSearchController extends AbstractController
+class CreateFeedController
 {
-    #[Route('/user/search', name: 'get user', methods: Request::METHOD_GET, format: 'json')]
+    #[Route('/post/create', name: 'create post', methods: Request::METHOD_POST, format: 'json')]
     public function handle(
-        #[MapQueryParameter] string $first_name,
-        #[MapQueryParameter] string $last_name,
-        UserSearchHandler $handler
-    ) {
+        #[CurrentUser] ?User $user,
+        #[MapRequestPayload(validationFailedStatusCode: Response::HTTP_BAD_REQUEST)]
+        CreateFeedEntryDto $entryDto,
+        CreateFeedHandler $handler,
+    ): Response {
         try {
-            $result = $handler->handle($first_name, $last_name);
-        } catch (UserNotFoundException $e) {
-            return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_NOT_FOUND);
+            $handler->handle($user, $entryDto);
         } catch (Throwable $e) {
             return new JsonResponse(
                 [
@@ -42,6 +45,6 @@ class UserSearchController extends AbstractController
             );
         }
 
-        return new JsonResponse($result, Response::HTTP_OK);
+        return new JsonResponse();
     }
 }

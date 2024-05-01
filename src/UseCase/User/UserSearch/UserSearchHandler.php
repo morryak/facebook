@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\UseCase\User\UserSearch;
 
-use App\UseCase\User\GetUser\UserNotFoundException;
+use App\AppBundle\Exception\UserNotFoundException;
 use Doctrine\DBAL\Exception as DbalException;
 
 readonly class UserSearchHandler

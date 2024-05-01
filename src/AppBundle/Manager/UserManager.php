@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\UseCase\User\GetUser;
+namespace App\AppBundle\Manager;
 
 use App\UseCase\AbstractManager;
 use Doctrine\DBAL\Exception as DbalException;
 
-class GetUserManager extends AbstractManager
+class UserManager extends AbstractManager
 {
     /**
      * @throws DbalException
      */
-    public function getUser(int $id): array
+    public function getUser(string $id): array
     {
         $sql = '
             SELECT 
