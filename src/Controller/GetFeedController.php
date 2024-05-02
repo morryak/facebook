@@ -22,7 +22,7 @@ class GetFeedController
     public function handle(
         #[CurrentUser] ?User $user,
         GetFeedHandler $handler,
-        #[MapQueryParameter(filter: FILTER_VALIDATE_INT)] int $limit = 10,
+        #[MapQueryParameter(filter: FILTER_VALIDATE_INT)] int $limit = 1000,
         #[MapQueryParameter(filter: FILTER_VALIDATE_INT)] int $offset = 0,
     ): Response {
         try {

@@ -47,4 +47,8 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
 
-
+  redis:
+    container_name: ${PROJECT}-redis
+    image: redis
+    ports:
+      - "6379:6379"

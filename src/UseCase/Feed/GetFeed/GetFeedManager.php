@@ -24,6 +24,7 @@ class GetFeedManager extends AbstractManager
             FROM feed f
             INNER JOIN friends_list fl ON fl.friend_id = f.user_id  
             WHERE fl.user_id = :user_id
+            ORDER BY f.updated_at DESC
             LIMIT :limit
             OFFSET :offset
         ';

@@ -4,16 +4,13 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\DTO\RequestDto\RegistrationEntryDto;
 use App\Entity\User;
 use App\UseCase\Feed\CreateFeed\CreateFeedEntryDto;
 use App\UseCase\Feed\CreateFeed\CreateFeedHandler;
-use App\UseCase\Feed\GetFeed\GetFeedHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
-use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;

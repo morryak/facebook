@@ -4,6 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    redis_url: '%env(string:REDIS_URL)%'
 
 services:
     # default configuration for services in *this* file
@@ -26,5 +27,17 @@ services:
     App\AppBundle\Doctrine\Migrations\IgnoreFksListener:
         tags:
             - {name: doctrine.event_listener, event: postGenerateSchema }
+
+    app.factory.redis:
+        class: Predis\Client
+        factory:
+            - App\AppBundle\Factory\RedisConnectionFactory
+            - createRedisClient
+        arguments:
+            - '%redis_url%'
+
+    App\AppBundle\Manager\RedisManager:
+        arguments:
+            - '@app.factory.redis'
 
     App\Security\ApiKeyAuthenticator:
