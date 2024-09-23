@@ -38,6 +38,7 @@ services:
       context: docker/context
       dockerfile: images/mysql/dev/Dockerfile
     volumes:
+      - ./docker/data/lib/mysql:/var/lib/mysql
       - ./docker/context/conf/mysql/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
     ports:
       - "3306:3306"
@@ -47,8 +48,8 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
 
-  redis:
-    container_name: ${PROJECT}-redis
-    image: redis
-    ports:
-      - "6379:6379"
+#  redis:
+#    container_name: ${PROJECT}-redis
+#    image: redis
+#    ports:
+#      - "6379:6379"

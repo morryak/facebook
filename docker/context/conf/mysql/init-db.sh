@@ -3,6 +3,7 @@ set -e
 
 echo '##########'
 echo 'Database configuration script'
+export $(grep -v '^#' .env | xargs)
 env
 echo '##########'
 

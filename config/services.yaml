@@ -28,6 +28,17 @@ services:
         tags:
             - {name: doctrine.event_listener, event: postGenerateSchema }
 
+    GuzzleHttp\ClientInterface:
+        factory: ['App\AppBundle\Factory\HttpClientFactory', 'createGuzzleClient']
+
+    App\UseCase\Spotify\SpotifyHandler:
+        arguments:
+            $client: '@GuzzleHttp\ClientInterface'
+
+    App\Command\TestCommand:
+        arguments:
+            $handler: '@App\UseCase\Spotify\SpotifyHandler'
+
     app.factory.redis:
         class: Predis\Client
         factory:

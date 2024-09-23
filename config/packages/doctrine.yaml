@@ -4,7 +4,7 @@ doctrine:
         connections:
             default:
                 url: '%env(resolve:DATABASE_URL)%'
-                driver_class: App\AppBundle\Doctrine\DBAL\Driver\PDOMySqlDriver
+                driver: 'pdo_mysql'
                 mapping_types:
                     enum: string
     orm:
