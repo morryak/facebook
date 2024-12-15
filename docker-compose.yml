@@ -48,6 +48,13 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
 
+  selenium-firefox:
+    image: selenium/standalone-firefox:4.25.0-20240922
+    container_name: selenium-firefox
+    ports:
+      - "4444:4444"  # для подключения WebDriver
+      - "7900:7900"  # для VNC доступа
+    shm_size: 2g
 #  redis:
 #    container_name: ${PROJECT}-redis
 #    image: redis

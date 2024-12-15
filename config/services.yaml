@@ -31,13 +31,13 @@ services:
     GuzzleHttp\ClientInterface:
         factory: ['App\AppBundle\Factory\HttpClientFactory', 'createGuzzleClient']
 
-    App\UseCase\Spotify\SpotifyHandler:
+    App\UseCase\ProcessMusic\Spotify\SpotifyApiService:
         arguments:
             $client: '@GuzzleHttp\ClientInterface'
 
-    App\Command\TestCommand:
+    App\Command\ProcessMusicCommand:
         arguments:
-            $handler: '@App\UseCase\Spotify\SpotifyHandler'
+            $handler: '@App\UseCase\ProcessMusic\ProcessMusicHandler'
 
     app.factory.redis:
         class: Predis\Client

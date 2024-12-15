@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\UseCase\Spotify;
+namespace App\UseCase\ProcessMusic\Spotify;
 
 use App\UseCase\AbstractManager;
 use DateTimeImmutable;
